@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-var reporList = {
+var reporList = Map.unmodifiable({
   "臺北市警察局": "0911-510-914",
   "新北市警察局": "0912-095-110",
   "桃園市警察局": "0917-110-880",
@@ -26,7 +26,7 @@ var reporList = {
   "澎湖縣警察局": "0911-510-930",
   "金門縣警察局": "0911-510-931",
   "連江縣警察局": "0911-510-932"
-};
+});
 
 void main() {
   runApp(const MyApp());
@@ -39,34 +39,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.dark(),
-      home: const MyHomePage(),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  var _counter = 0;
+  var _tmp = [];
   void _incrementCounter() {
-    getData();
+    getData().then((value) {
+      _tmp = value;
+    });
+    if (kDebugMode) {
+      print(_tmp);
+    }
     setState(() {
       _counter++;
     });
   }
 
-  Future<void> getData() async {
+  Future<List> getData() async {
     await Geolocator.isLocationServiceEnabled().then((value) {
       if (value == false) {
         Geolocator.openLocationSettings();
       }
     });
-    await Geolocator.checkPermission().then((value) {
+    Geolocator.checkPermission().then((value) {
       if (value == LocationPermission.denied) {
         Geolocator.requestPermission();
         //   showDialog(
@@ -79,32 +85,42 @@ class _MyHomePageState extends State<MyHomePage> {
         //       });
       }
     });
-    try {
-      var currentLocation = await Geolocator.getCurrentPosition(
-          timeLimit: const Duration(seconds: 0));
-      var placemarks = await placemarkFromCoordinates(
-          currentLocation.latitude, currentLocation.longitude);
-
-      if (kDebugMode) {
-        print(currentLocation);
-        print(placemarks.first.street);
-      }
-    } catch (e) {
-      Geolocator.getLastKnownPosition().then((value) async {
-        var placemarks =
-            await placemarkFromCoordinates(value!.latitude, value.longitude);
-        if (kDebugMode) {
-          var add = placemarks.first.street.toString();
-          print(add);
-          for (var item in reporList.entries) {
-            if (add.contains(item.key.substring(0, 2))) {
-              print(item.key);
-              print(item.value);
-            }
-          }
+    var currentLocation = await Geolocator.getCurrentPosition()
+        .timeout(const Duration(seconds: 0), onTimeout: (() {
+      return Geolocator.getLastKnownPosition().then((value) {
+        if (!value!.isMocked) {
+          return value;
         }
+        return Position(
+            accuracy: 0,
+            altitude: 0,
+            heading: 0,
+            latitude: 0,
+            longitude: 0,
+            speed: 0,
+            speedAccuracy: 0,
+            timestamp: DateTime.now());
       });
+    }));
+    var placemarks = await placemarkFromCoordinates(
+        currentLocation.latitude, currentLocation.longitude);
+
+    var officer = "";
+    var tel = "";
+    for (var item in reporList.entries) {
+      if (placemarks.first.street
+          .toString()
+          .contains(item.key.substring(0, 2))) {
+        officer = item.key;
+        tel = item.value;
+      }
     }
+    return [
+      currentLocation.toString(),
+      placemarks.first.street.toString(),
+      officer,
+      tel
+    ];
   }
 
   @override
