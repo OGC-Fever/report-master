@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:report_master/officer_list.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 class ReportVM extends ChangeNotifier {
   var reportList = ["紅線停車", "併排停車", "自訂"].map((value) {
@@ -13,13 +14,22 @@ class ReportVM extends ChangeNotifier {
   var smsController = TextEditingController();
   var address = "";
   var sms = "";
+  var sendable = false;
 
   void check() {
-    if (kDebugMode) {
-      print("chooseValue" + chooseValue);
-      print("address" + address);
-      print("sms" + sms);
-      print("smsController" + smsController.text);
+    // if (kDebugMode) {
+    //   print("chooseValue" + chooseValue);
+    //   print("address" + address);
+    //   print("sms" + sms);
+    //   print("smsController" + smsController.text);
+    // }
+    if (plateController.text.isNotEmpty &&
+        address.isNotEmpty &&
+        sms.isNotEmpty &&
+        smsController.text.isNotEmpty) {
+      sendable = true;
+    } else {
+      sendable = false;
     }
   }
 
@@ -28,8 +38,8 @@ class ReportVM extends ChangeNotifier {
       chooseValue = "";
     }
     smsController.text = "${plateController.text}\r\n$chooseValue\r\n$address";
-    notifyListeners();
     check();
+    notifyListeners();
   }
 
   Future<void> getAddress() async {
@@ -54,16 +64,15 @@ class ReportVM extends ChangeNotifier {
     address = "";
     sms = "";
     smsController.text = "";
-    notifyListeners();
     check();
+    notifyListeners();
   }
 
-  void sendSMS() {
-    // chooseValue = "";
-    // plateController.text = "";
-    // address = "";
-    // sms = "";
-    // smsController.text = "";
+  Future<void> sendingSMS() async {
+    await sendSMS(message: smsController.text, recipients: [sms])
+        .catchError((onError) {
+      sendable = false;
+    });
   }
 
   Future<List> getData() async {
@@ -75,14 +84,6 @@ class ReportVM extends ChangeNotifier {
     Geolocator.checkPermission().then((value) {
       if (value == LocationPermission.denied) {
         Geolocator.requestPermission();
-        //   showDialog(
-        //       context: context,
-        //       builder: (BuildContext context) {
-        //         return const AlertDialog(
-        //           title: Text("Success"),
-        //           content: Text("Save successfully"),
-        //         );
-        //       });
       }
     });
     var currentLocation = await Geolocator.getCurrentPosition()

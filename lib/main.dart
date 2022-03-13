@@ -37,6 +37,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var sendable = Provider.of<ReportVM>(context).sendable;
     var cus = const TextStyle(fontSize: 18);
     var reportList = Provider.of<ReportVM>(context).reportList;
     Provider.of<ReportVM>(context).chooseValue = chooseValue;
@@ -67,7 +68,7 @@ class HomePageState extends State<HomePage> {
                   style: cus,
                   controller: plateController,
                   onChanged: (value) {
-                    // renew;
+                    Provider.of<ReportVM>(context, listen: false).renew();
                   },
                 ),
               ),
@@ -117,10 +118,8 @@ class HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                       onTap: () {
-                        setState(() {
-                          Provider.of<ReportVM>(context, listen: false)
-                              .getAddress();
-                        });
+                        Provider.of<ReportVM>(context, listen: false)
+                            .getAddress();
                       },
                       child: const Icon(Icons.gps_not_fixed))
                 ],
@@ -170,9 +169,7 @@ class HomePageState extends State<HomePage> {
                   flex: 1,
                   child: ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          Provider.of<ReportVM>(context, listen: false).clear();
-                        });
+                        Provider.of<ReportVM>(context, listen: false).clear();
                       },
                       child: const Icon(Icons.cleaning_services)),
                 ),
@@ -180,9 +177,10 @@ class HomePageState extends State<HomePage> {
                 Expanded(
                   flex: 1,
                   child: ElevatedButton(
-                      onPressed: () {
-                        Provider.of<ReportVM>(context, listen: false).sendSMS();
-                      },
+                      onPressed: sendable
+                          ? () => Provider.of<ReportVM>(context, listen: false)
+                              .sendingSMS()
+                          : null,
                       child: const Icon(Icons.send)),
                 )
               ],
