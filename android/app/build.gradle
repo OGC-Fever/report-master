@@ -43,7 +43,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.report_master"
+        applicationId "ngo.ogc.report_devil"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()

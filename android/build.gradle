@@ -29,3 +29,6 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+	// flavorName {
+	// 		applicationId = "ngo.ogc.report_devil"
+	// 	}

@@ -1,4 +1,4 @@
-package com.example.report_master
+package ngo.ogc.report_devil
 
 import io.flutter.embedding.android.FlutterActivity
 
