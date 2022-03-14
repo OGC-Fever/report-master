@@ -6,13 +6,13 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ReportVM(),
-      child: const ReportMaster(),
+      child: const ReportDevil(),
     ),
   );
 }
 
-class ReportMaster extends StatelessWidget {
-  const ReportMaster({Key? key}) : super(key: key);
+class ReportDevil extends StatelessWidget {
+  const ReportDevil({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  var chooseValue = "紅線停車";
+  var chooseValue = "併排停車";
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class HomePageState extends State<HomePage> {
     var smsController = Provider.of<ReportVM>(context).smsController;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Report Master"),
+        title: const Text("Report Devil"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),

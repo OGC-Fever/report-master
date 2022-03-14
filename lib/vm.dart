@@ -6,10 +6,10 @@ import 'package:report_master/officer_list.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
 class ReportVM extends ChangeNotifier {
-  var reportList = ["紅線停車", "併排停車", "自訂"].map((value) {
+  var reportList = ["路口轉角停車", "併排停車", "公車站違停", "佔用身障車格", "其它"].map((value) {
     return DropdownMenuItem(child: Text(value), value: value);
   });
-  var chooseValue = "紅線停車";
+  var chooseValue = "併排停車";
   var plateController = TextEditingController();
   var smsController = TextEditingController();
   var address = "";
@@ -34,7 +34,7 @@ class ReportVM extends ChangeNotifier {
   }
 
   void renew() {
-    if (chooseValue == "自訂") {
+    if (chooseValue == "其它") {
       chooseValue = "";
     }
     smsController.text = "${plateController.text}\r\n$chooseValue\r\n$address";
