@@ -1,16 +1,11 @@
-# report_master
+# 檢舉魔人
 
-A new Flutter project.
+想要違停嗎?如果想要的話...那就雙黃燈打下去吧!  
+  
+諸位全都停在那裡...  
+
+全台灣,開始迎接大違停時代的來臨...  
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+諸君,讓我們盡情的濫用寶貴的警政資源吧...  
