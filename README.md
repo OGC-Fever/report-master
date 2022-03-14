@@ -9,3 +9,5 @@
 ## Getting Started
 
 諸君,讓我們盡情的濫用寶貴的警政資源吧...  
+
+![Screenshot_20220314-213453](https://user-images.githubusercontent.com/55621499/158183455-468a17ec-fe03-4b4e-8d4a-903eddf0aa32.png)
