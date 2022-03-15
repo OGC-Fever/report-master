@@ -45,36 +45,39 @@ class HomePageState extends State<HomePage> {
     var sms = Provider.of<ReportVM>(context).sms;
     var plateController = Provider.of<ReportVM>(context).plateController;
     var smsController = Provider.of<ReportVM>(context).smsController;
+    var rowHeight = MediaQuery.of(context).size.height / 11;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Report Devil"),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
+        child: SizedBox(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               SizedBox(
+                  height: rowHeight,
                   child: Row(children: [
-                Expanded(
-                    flex: 1,
-                    child: Text(
-                      "車牌:",
-                      style: cus,
-                    )),
-                Expanded(
-                  flex: 2,
-                  child: TextField(
-                    style: cus,
-                    controller: plateController,
-                    onChanged: (value) {
-                      Provider.of<ReportVM>(context, listen: false).renew();
-                    },
-                  ),
-                ),
-              ])),
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          "車牌:",
+                          style: cus,
+                        )),
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        style: cus,
+                        controller: plateController,
+                        onChanged: (value) {
+                          Provider.of<ReportVM>(context, listen: false).renew();
+                        },
+                      ),
+                    ),
+                  ])),
               SizedBox(
+                height: rowHeight,
                 child: Row(
                   children: [
                     Expanded(
@@ -95,13 +98,15 @@ class HomePageState extends State<HomePage> {
                             });
                             Provider.of<ReportVM>(context, listen: false)
                                 .chooseValue = value.toString();
-                            Provider.of<ReportVM>(context, listen: false).renew();
+                            Provider.of<ReportVM>(context, listen: false)
+                                .renew();
                           }),
                     ),
                   ],
                 ),
               ),
               SizedBox(
+                height: rowHeight * 2,
                 child: Row(
                   children: [
                     Expanded(
@@ -127,6 +132,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
+                height: rowHeight,
                 child: Row(
                   children: [
                     Expanded(
@@ -145,7 +151,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: 150,
+                height: rowHeight * 3,
                 child: Column(
                   children: [
                     Container(
@@ -157,34 +163,39 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                     TextField(
-                      maxLines: null,
+                      maxLines: 4,
                       style: cus,
                       controller: smsController,
                     ),
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Provider.of<ReportVM>(context, listen: false).clear();
-                        },
-                        child: const Icon(Icons.cleaning_services)),
-                  ),
-                  const Spacer(),
-                  Expanded(
-                    flex: 1,
-                    child: ElevatedButton(
-                        onPressed: sendable
-                            ? () => Provider.of<ReportVM>(context, listen: false)
-                                .sendingSMS()
-                            : null,
-                        child: const Icon(Icons.send)),
-                  )
-                ],
+              SizedBox(
+                height: rowHeight,
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Provider.of<ReportVM>(context, listen: false)
+                                .clear();
+                          },
+                          child: const Icon(Icons.cleaning_services)),
+                    ),
+                    const Spacer(),
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                          onPressed: sendable
+                              ? () =>
+                                  Provider.of<ReportVM>(context, listen: false)
+                                      .sendingSMS()
+                              : null,
+                          child: const Icon(Icons.send)),
+                    )
+                  ],
+                ),
               )
             ],
           ),
