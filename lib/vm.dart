@@ -107,14 +107,15 @@ class ReportVM extends ChangeNotifier {
     var placemarks = await placemarkFromCoordinates(
         currentLocation.latitude, currentLocation.longitude);
 
-    var tel = "";
+    var sms = "";
     for (var item in reporList.entries) {
       if (placemarks.first.street
           .toString()
-          .contains(item.key.substring(0, 2))) {
-        tel = item.value;
+          .contains(item.key.substring(0, 3))) {
+        sms = item.value;
       }
     }
-    return [placemarks.first.street.toString().substring(5), tel];
+
+    return [placemarks.first.street.toString().substring(5), sms];
   }
 }
