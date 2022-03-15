@@ -51,141 +51,143 @@ class HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            SizedBox(
-                child: Row(children: [
-              Expanded(
-                  flex: 1,
-                  child: Text(
-                    "車牌:",
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                  child: Row(children: [
+                Expanded(
+                    flex: 1,
+                    child: Text(
+                      "車牌:",
+                      style: cus,
+                    )),
+                Expanded(
+                  flex: 2,
+                  child: TextField(
                     style: cus,
-                  )),
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  style: cus,
-                  controller: plateController,
-                  onChanged: (value) {
-                    Provider.of<ReportVM>(context, listen: false).renew();
-                  },
+                    controller: plateController,
+                    onChanged: (value) {
+                      Provider.of<ReportVM>(context, listen: false).renew();
+                    },
+                  ),
+                ),
+              ])),
+              SizedBox(
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          "檢舉項目:",
+                          style: cus,
+                        )),
+                    Expanded(
+                      flex: 2,
+                      child: DropdownButton(
+                          style: cus,
+                          value: chooseValue,
+                          items: reportList.toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              chooseValue = value.toString();
+                            });
+                            Provider.of<ReportVM>(context, listen: false)
+                                .chooseValue = value.toString();
+                            Provider.of<ReportVM>(context, listen: false).renew();
+                          }),
+                    ),
+                  ],
                 ),
               ),
-            ])),
-            SizedBox(
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Text(
-                        "檢舉項目:",
-                        style: cus,
-                      )),
-                  Expanded(
-                    flex: 2,
-                    child: DropdownButton(
-                        style: cus,
-                        value: chooseValue,
-                        items: reportList.toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            chooseValue = value.toString();
-                          });
-                          Provider.of<ReportVM>(context, listen: false)
-                              .chooseValue = value.toString();
-                          Provider.of<ReportVM>(context, listen: false).renew();
-                        }),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Text(
-                        "Address:",
-                        style: cus,
-                      )),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      address,
-                      style: cus,
-                    ),
-                  ),
-                  GestureDetector(
-                      onTap: () {
-                        Provider.of<ReportVM>(context, listen: false)
-                            .getAddress();
-                      },
-                      child: const Icon(Icons.gps_not_fixed))
-                ],
-              ),
-            ),
-            SizedBox(
-              child: Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Text(
-                        "SMS:",
-                        style: cus,
-                      )),
-                  Expanded(
+              SizedBox(
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          "Address:",
+                          style: cus,
+                        )),
+                    Expanded(
                       flex: 2,
                       child: Text(
-                        sms,
+                        address,
                         style: cus,
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 150,
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Report Message:",
-                      style: cus,
-                      textAlign: TextAlign.justify,
+                      ),
                     ),
-                  ),
-                  TextField(
-                    maxLines: null,
-                    style: cus,
-                    controller: smsController,
-                  ),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Provider.of<ReportVM>(context, listen: false).clear();
-                      },
-                      child: const Icon(Icons.cleaning_services)),
+                    GestureDetector(
+                        onTap: () {
+                          Provider.of<ReportVM>(context, listen: false)
+                              .getAddress();
+                        },
+                        child: const Icon(Icons.gps_not_fixed))
+                  ],
                 ),
-                const Spacer(),
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                      onPressed: sendable
-                          ? () => Provider.of<ReportVM>(context, listen: false)
-                              .sendingSMS()
-                          : null,
-                      child: const Icon(Icons.send)),
-                )
-              ],
-            )
-          ],
+              ),
+              SizedBox(
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          "SMS:",
+                          style: cus,
+                        )),
+                    Expanded(
+                        flex: 2,
+                        child: Text(
+                          sms,
+                          style: cus,
+                        )),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 150,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Report Message:",
+                        style: cus,
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                    TextField(
+                      maxLines: null,
+                      style: cus,
+                      controller: smsController,
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Provider.of<ReportVM>(context, listen: false).clear();
+                        },
+                        child: const Icon(Icons.cleaning_services)),
+                  ),
+                  const Spacer(),
+                  Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                        onPressed: sendable
+                            ? () => Provider.of<ReportVM>(context, listen: false)
+                                .sendingSMS()
+                            : null,
+                        child: const Icon(Icons.send)),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
