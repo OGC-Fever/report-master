@@ -6,7 +6,8 @@ import 'package:report_master/officer_list.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
 class ReportVM extends ChangeNotifier {
-  var reportList = ["路口轉角停車", "併排停車", "公車站違停", "佔用身障車格", "其它"].map((value) {
+  var reportList =
+      ["紅線停車", "路口轉角停車", "併排停車", "公車站違停", "佔用身障車格", "其它"].map((value) {
     return DropdownMenuItem(child: Text(value), value: value);
   });
   var chooseValue = "併排停車";
