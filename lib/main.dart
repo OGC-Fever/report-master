@@ -33,14 +33,12 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  var chooseValue = "併排停車";
-
   @override
   Widget build(BuildContext context) {
+    var chooseValue = Provider.of<ReportVM>(context).chooseValue;
     var sendable = Provider.of<ReportVM>(context).sendable;
     var cus = const TextStyle(fontSize: 18);
     var reportList = Provider.of<ReportVM>(context).reportList;
-    Provider.of<ReportVM>(context).chooseValue = chooseValue;
     var address = Provider.of<ReportVM>(context).address;
     var sms = Provider.of<ReportVM>(context).sms;
     var plateController = Provider.of<ReportVM>(context).plateController;
@@ -93,9 +91,6 @@ class HomePageState extends State<HomePage> {
                           value: chooseValue,
                           items: reportList.toList(),
                           onChanged: (value) {
-                            setState(() {
-                              chooseValue = value.toString();
-                            });
                             Provider.of<ReportVM>(context, listen: false)
                                 .chooseValue = value.toString();
                             Provider.of<ReportVM>(context, listen: false)
@@ -123,11 +118,14 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                     GestureDetector(
-                        onTap: () {
-                          Provider.of<ReportVM>(context, listen: false)
-                              .getAddress();
-                        },
-                        child: const Icon(Icons.gps_not_fixed))
+                      onTap: () {
+                        Provider.of<ReportVM>(context, listen: false)
+                            .getAddress();
+                      },
+                      child: const Icon(
+                        Icons.gps_not_fixed,
+                      ),
+                    )
                   ],
                 ),
               ),

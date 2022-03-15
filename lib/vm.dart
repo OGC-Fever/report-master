@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
+import 'package:report_master/main.dart';
 import 'package:report_master/officer_list.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
@@ -10,7 +12,8 @@ class ReportVM extends ChangeNotifier {
       ["紅線停車", "路口轉角停車", "併排停車", "公車站違停", "佔用身障車格", "其它"].map((value) {
     return DropdownMenuItem(child: Text(value), value: value);
   });
-  var chooseValue = "併排停車";
+  String? chooseValue;
+
   var plateController = TextEditingController();
   var smsController = TextEditingController();
   var address = "";
@@ -35,10 +38,13 @@ class ReportVM extends ChangeNotifier {
   }
 
   void renew() {
+    String? item = "";
     if (chooseValue == "其它") {
-      chooseValue = "";
+      item = "";
+    } else {
+      item = chooseValue;
     }
-    smsController.text = "${plateController.text}\r\n$chooseValue\r\n$address";
+    smsController.text = "${plateController.text}\r\n$item\r\n$address";
     check();
     notifyListeners();
   }
@@ -47,6 +53,14 @@ class ReportVM extends ChangeNotifier {
     if (kDebugMode) {
       print("hello");
     }
+    // showDialog(
+    //   builder: (BuildContext context) {
+    //     return const AlertDialog(
+    //       content: Text("data"),
+    //     );
+    //   },
+    //   context: HomePageState().context,
+    // );
     getData().then((value) {
       try {
         address = value[0];
@@ -90,20 +104,10 @@ class ReportVM extends ChangeNotifier {
     var currentLocation = await Geolocator.getCurrentPosition()
         .timeout(const Duration(seconds: 5), onTimeout: (() {
       return Geolocator.getLastKnownPosition().then((value) {
-        if (!value!.isMocked) {
-          return value;
-        }
-        return Position(
-            accuracy: 0,
-            altitude: 0,
-            heading: 0,
-            latitude: 0,
-            longitude: 0,
-            speed: 0,
-            speedAccuracy: 0,
-            timestamp: DateTime.now());
+        return value!;
       });
     }));
+
     var placemarks = await placemarkFromCoordinates(
         currentLocation.latitude, currentLocation.longitude);
 
