@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
-import 'package:report_master/main.dart';
 import 'package:report_master/officer_list.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 
@@ -49,18 +47,32 @@ class ReportVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAddress() async {
+  void busyDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Text("Getting Address..."),
+        );
+      },
+      context: context,
+    );
+  }
+
+  Future<void> getAddress(var context) async {
     if (kDebugMode) {
       print("hello");
     }
-    // showDialog(
-    //   builder: (BuildContext context) {
-    //     return const AlertDialog(
-    //       content: Text("data"),
-    //     );
-    //   },
-    //   context: HomePageState().context,
-    // );
+    showDialog(
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          alignment: Alignment.center,
+          content: Text("Getting Address..."),
+        );
+      },
+      context: context,
+    );
     getData().then((value) {
       try {
         address = value[0];
@@ -70,11 +82,11 @@ class ReportVM extends ChangeNotifier {
         address = "";
       }
       renew();
-    });
+    }).whenComplete(() => Navigator.of(context).pop());
   }
 
   void clear() {
-    chooseValue = "";
+    chooseValue = null;
     plateController.text = "";
     address = "";
     sms = "";

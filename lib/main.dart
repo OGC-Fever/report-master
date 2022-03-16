@@ -120,7 +120,7 @@ class HomePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         Provider.of<ReportVM>(context, listen: false)
-                            .getAddress();
+                            .getAddress(context);
                       },
                       child: const Icon(
                         Icons.gps_not_fixed,
