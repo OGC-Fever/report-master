@@ -37,7 +37,7 @@ class ReportVM extends ChangeNotifier {
 
   void renew() {
     String? item = "";
-    if (chooseValue == "其它") {
+    if (chooseValue == "其它" || chooseValue == null) {
       item = "";
     } else {
       item = chooseValue;
@@ -45,19 +45,6 @@ class ReportVM extends ChangeNotifier {
     smsController.text = "${plateController.text}\r\n$item\r\n$address";
     check();
     notifyListeners();
-  }
-
-  void busyDialog(
-    BuildContext context,
-  ) {
-    showDialog(
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          content: Text("Getting Address..."),
-        );
-      },
-      context: context,
-    );
   }
 
   Future<void> getAddress(var context) async {
@@ -96,10 +83,9 @@ class ReportVM extends ChangeNotifier {
   }
 
   Future<void> sendingSMS() async {
-    await sendSMS(message: smsController.text, recipients: [sms])
-        .catchError((onError) {
-      sendable = false;
-    });
+    await sendSMS(message: smsController.text, recipients: [sms]);
+    sendable = false;
+    notifyListeners();
   }
 
   Future<List> getData() async {
