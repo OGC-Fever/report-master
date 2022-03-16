@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -52,6 +54,7 @@ class ReportVM extends ChangeNotifier {
       print("hello");
     }
     showDialog(
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return const AlertDialog(
           alignment: Alignment.center,
@@ -61,15 +64,12 @@ class ReportVM extends ChangeNotifier {
       context: context,
     );
     getData().then((value) {
-      try {
-        address = value[0];
-        sms = value[1];
-      } catch (e) {
-        sms = "";
-        address = "";
-      }
+      address = value[0];
+      sms = value[1];
       renew();
-    }).whenComplete(() => Navigator.of(context).pop());
+    }).whenComplete(() {
+      Navigator.pop(context);
+    });
   }
 
   void clear() {
