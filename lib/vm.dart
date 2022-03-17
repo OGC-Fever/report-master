@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -21,12 +20,6 @@ class ReportVM extends ChangeNotifier {
   var sendable = false;
 
   void check() {
-    // if (kDebugMode) {
-    //   print("chooseValue" + chooseValue);
-    //   print("address" + address);
-    //   print("sms" + sms);
-    //   print("smsController" + smsController.text);
-    // }
     if (plateController.text.isNotEmpty &&
         address.isNotEmpty &&
         sms.isNotEmpty &&
@@ -50,9 +43,6 @@ class ReportVM extends ChangeNotifier {
   }
 
   Future<void> getAddress(var context) async {
-    if (kDebugMode) {
-      print("hello");
-    }
     showDialog(
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -107,7 +97,8 @@ class ReportVM extends ChangeNotifier {
     }));
 
     var placemarks = await placemarkFromCoordinates(
-        currentLocation.latitude, currentLocation.longitude);
+        currentLocation.latitude, currentLocation.longitude,
+        localeIdentifier: "zh_TW");
 
     var sms = "";
     for (var item in reporList.entries) {

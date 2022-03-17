@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:report_master/vm.dart';
 
 void main() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ReportVM(),
-      child: const ReportDevil(),
-    ),
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(
+      ChangeNotifierProvider(
+        create: (context) => ReportVM(),
+        child: const ReportDevil(),
+      ),
+    );
+  });
 }
 
 class ReportDevil extends StatelessWidget {
