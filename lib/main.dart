@@ -242,7 +242,7 @@ class HomePageState extends State<HomePage> {
                       style: contentStyle,
                     ),
                     TextField(
-                      maxLines: 6,
+                      maxLines: null,
                       style: contentStyle,
                       controller: smsController,
                     ),
@@ -265,13 +265,82 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                const Spacer(),
                 Expanded(
                   flex: 1,
                   child: ConstrainedBox(
                     constraints: BoxConstraints.expand(height: rowHeight),
                     child: IconButton(
-                      icon: const Icon(Icons.send),
+                      icon: const Icon(Icons.info_outline),
+                      iconSize: rowHeight / 2,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Stack(
+                              children: [
+                                AlertDialog(
+                                  title: Text(
+                                    "使用說明",
+                                    style: titleStyle,
+                                  ),
+                                  content: SizedBox(
+                                    height: rowHeight * 3,
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "step 1:輸入車牌",
+                                            style: contentStyle,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "step 2:選擇檢舉項目",
+                                            style: contentStyle,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "step 3:定位取得地址",
+                                            style: contentStyle,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "step 4:自訂檢舉內容",
+                                            style: contentStyle,
+                                          ),
+                                          const Spacer(),
+                                          Text(
+                                            "step 5:跳轉系統簡訊APP, 送出",
+                                            style: contentStyle,
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                                Positioned(
+                                    top: rowHeight * 3,
+                                    right:
+                                        MediaQuery.of(context).size.width / 12,
+                                    child: GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: rowHeight / 2,
+                                      ),
+                                    )),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.expand(height: rowHeight),
+                    child: IconButton(
+                      icon: const Icon(Icons.send_outlined),
                       iconSize: rowHeight / 2,
                       onPressed: sendable
                           ? () => Provider.of<ReportVM>(context, listen: false)
