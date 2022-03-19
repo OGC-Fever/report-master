@@ -22,6 +22,8 @@ class ReportVM extends ChangeNotifier {
   var address = "";
   var sms = "";
   var sendable = false;
+  late TextStyle contentStyle;
+  late TextStyle titleStyle;
 
   void renew() {
     String? item = "";
@@ -90,7 +92,9 @@ class ReportVM extends ChangeNotifier {
     await checkGPS();
     Navigator.pop(context);
     if (!gpsStatus) {
-      msgBox(context, "無GPS訊號", const Text("讀取最近一次的定位地址"), true);
+      msgBox(
+          context, "無GPS訊號", Text("讀取最近一次的定位地址", style: contentStyle), false);
+      Timer(Duration(seconds: timeout), () => Navigator.pop(context));
     }
     var placemarks = await placemarkFromCoordinates(
             currentLocation!.latitude, currentLocation!.longitude,
@@ -117,7 +121,7 @@ class ReportVM extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           alignment: Alignment.center,
-          title: Text(title),
+          title: Text(title, style: titleStyle),
           content: widget,
         );
       },

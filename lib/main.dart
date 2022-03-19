@@ -42,56 +42,92 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var chooseValue = Provider.of<ReportVM>(context).chooseValue;
     var sendable = Provider.of<ReportVM>(context).sendable;
-    var customStyle = const TextStyle(fontSize: 18);
     var reportList = Provider.of<ReportVM>(context).reportList;
     var address = Provider.of<ReportVM>(context).address;
     var sms = Provider.of<ReportVM>(context).sms;
     var plateController = Provider.of<ReportVM>(context).plateController;
     var smsController = Provider.of<ReportVM>(context).smsController;
-    var rowHeight = MediaQuery.of(context).size.height / 11;
+    var rowHeight = MediaQuery.of(context).size.height / 12;
+    var contentStyle = TextStyle(fontSize: rowHeight / 3);
+    var titleStyle = TextStyle(fontSize: rowHeight / 2);
+
+    Provider.of<ReportVM>(context).contentStyle = contentStyle;
+    Provider.of<ReportVM>(context).titleStyle = titleStyle;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("檢舉魔人-簡訊版"),
+        toolbarHeight: rowHeight,
+        title: Text(
+          "檢舉魔人-簡訊版",
+          style: titleStyle,
+        ),
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text("檢舉魔人-簡訊版"),
-                    content: ConstrainedBox(
-                      constraints: BoxConstraints.expand(
-                          height: MediaQuery.of(context).size.height / 2),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: const [
-                                Expanded(flex: 1, child: Text("作者:")),
-                                Expanded(flex: 3, child: Text("OrzOGC")),
-                              ],
-                            ),
-                            const Spacer(),
-                            Row(
-                              children: const [
-                                Text(
-                                  "寫糞code動機:",
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            const Text(
-                              "既然條子們嫌坐在辦公室吹冷氣辦案太累, 我只好大發慈悲的請他們多出門走走,多運動有益身心健康, 違規魔人一個比一個誇張無恥毫無下限, 反正檢舉不用錢,就讓我們來濫用保貴的警政資源當地下巿長, 一起來互相傷害吧!",
-                            ),
-                          ]),
-                    ),
-                  );
-                },
-              );
-            },
-            child: const Text("about"),
+          SizedBox(
+            child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        AlertDialog(
+                          title: Text(
+                            "檢舉魔人-簡訊版",
+                            style: titleStyle,
+                          ),
+                          content: SizedBox(
+                            height: rowHeight * 3,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "作者: OrzOGC",
+                                    style: contentStyle,
+                                  ),
+                                  SizedBox(
+                                    height: rowHeight / 8,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "寫糞code動機:",
+                                        style: contentStyle,
+                                      ),
+                                      SizedBox(
+                                        height: rowHeight / 8,
+                                      ),
+                                      Text(
+                                        "讓我們來濫用保貴的警政資源當地下巿長, 一起來互相傷害吧!",
+                                        style: contentStyle,
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+                          ),
+                        ),
+                        Positioned(
+                            top: rowHeight * 3,
+                            right: MediaQuery.of(context).size.width / 12,
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Icon(
+                                Icons.close,
+                                size: rowHeight / 2,
+                              ),
+                            )),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Text(
+                "about",
+                style: contentStyle,
+              ),
+            ),
           )
         ],
       ),
@@ -101,18 +137,17 @@ class HomePageState extends State<HomePage> {
           children: [
             ConstrainedBox(
                 constraints: BoxConstraints.expand(height: rowHeight),
-                // height: rowHeight,
                 child: Row(children: [
                   Expanded(
                       flex: 1,
                       child: Text(
                         "車牌:",
-                        style: customStyle,
+                        style: contentStyle,
                       )),
                   Expanded(
                     flex: 2,
                     child: TextField(
-                      style: customStyle,
+                      style: contentStyle,
                       controller: plateController,
                       onChanged: (value) {
                         Provider.of<ReportVM>(context, listen: false).renew();
@@ -128,12 +163,14 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "檢舉項目:",
-                        style: customStyle,
+                        style: contentStyle,
                       )),
                   Expanded(
                     flex: 2,
                     child: DropdownButton(
-                        style: customStyle,
+                        itemHeight: rowHeight,
+                        iconSize: rowHeight,
+                        style: contentStyle,
                         value: chooseValue,
                         items: reportList.toList(),
                         onChanged: (value) {
@@ -153,27 +190,27 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "地址:",
-                        style: customStyle,
+                        style: contentStyle,
                       )),
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: Text(
                       address,
-                      style: customStyle,
+                      style: contentStyle,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
+                  IconButton(
+                    icon: const Icon(Icons.gps_not_fixed),
+                    iconSize: rowHeight / 2,
+                    onPressed: () {
                       Provider.of<ReportVM>(context, listen: false)
                           .getAddress(context);
                     },
-                    child: const Icon(
-                      Icons.gps_not_fixed,
-                    ),
-                  )
+                  ),
                 ],
               ),
             ),
+            const Divider(),
             ConstrainedBox(
               constraints: BoxConstraints.expand(height: rowHeight),
               child: Row(
@@ -182,17 +219,18 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "簡訊號碼:",
-                        style: customStyle,
+                        style: contentStyle,
                       )),
                   Expanded(
                       flex: 2,
                       child: Text(
                         sms,
-                        style: customStyle,
+                        style: contentStyle,
                       )),
                 ],
               ),
             ),
+            const Divider(),
             ConstrainedBox(
               constraints: BoxConstraints.expand(height: rowHeight * 3),
               child: SingleChildScrollView(
@@ -201,11 +239,11 @@ class HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       "檢舉內容:",
-                      style: customStyle,
+                      style: contentStyle,
                     ),
                     TextField(
-                      maxLines: null,
-                      style: customStyle,
+                      maxLines: 6,
+                      style: contentStyle,
                       controller: smsController,
                     ),
                   ],
@@ -218,11 +256,13 @@ class HomePageState extends State<HomePage> {
                   flex: 1,
                   child: ConstrainedBox(
                     constraints: BoxConstraints.expand(height: rowHeight),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Provider.of<ReportVM>(context, listen: false).clear();
-                        },
-                        child: const Icon(Icons.cleaning_services)),
+                    child: IconButton(
+                      icon: const Icon(Icons.cleaning_services),
+                      iconSize: rowHeight / 2,
+                      onPressed: () {
+                        Provider.of<ReportVM>(context, listen: false).clear();
+                      },
+                    ),
                   ),
                 ),
                 const Spacer(),
@@ -230,13 +270,14 @@ class HomePageState extends State<HomePage> {
                   flex: 1,
                   child: ConstrainedBox(
                     constraints: BoxConstraints.expand(height: rowHeight),
-                    child: ElevatedButton(
-                        onPressed: sendable
-                            ? () =>
-                                Provider.of<ReportVM>(context, listen: false)
-                                    .sendingSMS()
-                            : null,
-                        child: const Icon(Icons.send)),
+                    child: IconButton(
+                      icon: const Icon(Icons.send),
+                      iconSize: rowHeight / 2,
+                      onPressed: sendable
+                          ? () => Provider.of<ReportVM>(context, listen: false)
+                              .sendingSMS()
+                          : null,
+                    ),
                   ),
                 )
               ],
