@@ -13,6 +13,27 @@ class ReportVM extends ChangeNotifier {
     return DropdownMenuItem(child: Text(value), value: value);
   });
   String? chooseValue;
+  Position? currentLocation;
+  var gpsStatus = false;
+  var internetStatus = false;
+  var timeout = 5;
+  var plateController = TextEditingController();
+  var smsController = TextEditingController();
+  var address = "";
+  var sms = "";
+  var sendable = false;
+
+  void renew() {
+    String? item = "";
+    if (chooseValue == "其它" || chooseValue == null) {
+      item = "";
+    } else {
+      item = chooseValue;
+    }
+    smsController.text = "${plateController.text}\r\n$item\r\n$address";
+    check();
+    notifyListeners();
+  }
 
   Future<void> checkInternet() async {
     await InternetAddress.lookup("google.com").then((value) {
@@ -48,38 +69,6 @@ class ReportVM extends ChangeNotifier {
         });
   }
 
-  Position? currentLocation;
-  var gpsStatus = false;
-  var internetStatus = false;
-  var timeout = 5;
-  var plateController = TextEditingController();
-  var smsController = TextEditingController();
-  var address = "";
-  var sms = "";
-  var sendable = false;
-  void check() {
-    if (plateController.text.isNotEmpty &&
-        address.isNotEmpty &&
-        sms.isNotEmpty &&
-        smsController.text.isNotEmpty) {
-      sendable = true;
-    } else {
-      sendable = false;
-    }
-  }
-
-  void renew() {
-    String? item = "";
-    if (chooseValue == "其它" || chooseValue == null) {
-      item = "";
-    } else {
-      item = chooseValue;
-    }
-    smsController.text = "${plateController.text}\r\n$item\r\n$address";
-    check();
-    notifyListeners();
-  }
-
   Future<void> getAddress(var context) async {
     getData(context).then((value) {
       if (value != null) {
@@ -88,36 +77,6 @@ class ReportVM extends ChangeNotifier {
       }
       renew();
     });
-  }
-
-  void clear() {
-    chooseValue = null;
-    plateController.text = "";
-    address = "";
-    sms = "";
-    smsController.text = "";
-    check();
-    notifyListeners();
-  }
-
-  Future<void> sendingSMS() async {
-    await sendSMS(message: smsController.text, recipients: [sms]);
-    sendable = false;
-    notifyListeners();
-  }
-
-  Future msgBox(context, title, widget, dismiss) {
-    return showDialog(
-      barrierDismissible: dismiss,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          alignment: Alignment.center,
-          title: Text(title),
-          content: widget,
-        );
-      },
-      context: context,
-    );
   }
 
   Future<List?> getData(context) async {
@@ -131,8 +90,7 @@ class ReportVM extends ChangeNotifier {
     await checkGPS();
     Navigator.pop(context);
     if (!gpsStatus) {
-      msgBox(context, "無GPS訊號",
-          const Text("讀取最近一次的定位地址"), true);
+      msgBox(context, "無GPS訊號", const Text("讀取最近一次的定位地址"), true);
     }
     var placemarks = await placemarkFromCoordinates(
             currentLocation!.latitude, currentLocation!.longitude,
@@ -150,5 +108,46 @@ class ReportVM extends ChangeNotifier {
       }
     }
     return [placemarks.first.street.toString().substring(5), sms];
+  }
+
+  Future msgBox(context, title, widget, dismiss) {
+    return showDialog(
+      barrierDismissible: dismiss,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.center,
+          title: Text(title),
+          content: widget,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void check() {
+    if (plateController.text.isNotEmpty &&
+        address.isNotEmpty &&
+        sms.isNotEmpty &&
+        smsController.text.isNotEmpty) {
+      sendable = true;
+    } else {
+      sendable = false;
+    }
+  }
+
+  Future<void> sendingSMS() async {
+    await sendSMS(message: smsController.text, recipients: [sms]);
+    sendable = false;
+    notifyListeners();
+  }
+
+  void clear() {
+    chooseValue = null;
+    plateController.text = "";
+    address = "";
+    sms = "";
+    smsController.text = "";
+    check();
+    notifyListeners();
   }
 }
