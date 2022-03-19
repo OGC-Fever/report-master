@@ -290,27 +290,27 @@ class HomePageState extends State<HomePage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "step 1:輸入車牌",
+                                            "step.1:輸入車牌",
                                             style: contentStyle,
                                           ),
                                           const Spacer(),
                                           Text(
-                                            "step 2:選擇檢舉項目",
+                                            "step.2:選擇檢舉項目",
                                             style: contentStyle,
                                           ),
                                           const Spacer(),
                                           Text(
-                                            "step 3:定位取得地址",
+                                            "step.3:定位取得地址",
                                             style: contentStyle,
                                           ),
                                           const Spacer(),
                                           Text(
-                                            "step 4:自訂檢舉內容",
+                                            "step.4:自訂檢舉內容",
                                             style: contentStyle,
                                           ),
                                           const Spacer(),
                                           Text(
-                                            "step 5:跳轉系統簡訊APP, 送出",
+                                            "step.5:跳轉系統簡訊APP, 送出",
                                             style: contentStyle,
                                           ),
                                         ]),
