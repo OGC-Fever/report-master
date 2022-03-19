@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -13,12 +14,49 @@ class ReportVM extends ChangeNotifier {
   });
   String? chooseValue;
 
+  Future<void> checkInternet() async {
+    await InternetAddress.lookup("google.com").then((value) {
+      if (value.isNotEmpty) {
+        internetStatus = true;
+      }
+    }).catchError((error) {
+      internetStatus = false;
+    });
+  }
+
+  Future<void> checkGPS() async {
+    await Geolocator.isLocationServiceEnabled().then((value) {
+      if (value == false) {
+        Geolocator.openLocationSettings();
+      }
+    });
+    await Geolocator.checkPermission().then((value) {
+      if (value == LocationPermission.denied) {
+        Geolocator.requestPermission();
+      }
+    });
+    await Geolocator.getCurrentPosition()
+        .then((value) {
+          currentLocation = value;
+          gpsStatus = true;
+        })
+        .timeout(Duration(seconds: timeout))
+        .catchError((error) async {
+          currentLocation =
+              await Geolocator.getLastKnownPosition().then((value) => value);
+          gpsStatus = false;
+        });
+  }
+
+  Position? currentLocation;
+  var gpsStatus = false;
+  var internetStatus = false;
+  var timeout = 5;
   var plateController = TextEditingController();
   var smsController = TextEditingController();
   var address = "";
   var sms = "";
   var sendable = false;
-
   void check() {
     if (plateController.text.isNotEmpty &&
         address.isNotEmpty &&
@@ -43,22 +81,12 @@ class ReportVM extends ChangeNotifier {
   }
 
   Future<void> getAddress(var context) async {
-    showDialog(
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const AlertDialog(
-          alignment: Alignment.center,
-          content: Text("Getting Address..."),
-        );
-      },
-      context: context,
-    );
-    getData().then((value) {
-      address = value[0];
-      sms = value[1];
+    getData(context).then((value) {
+      if (value != null) {
+        address = value[0];
+        sms = value[1];
+      }
       renew();
-    }).whenComplete(() {
-      Navigator.pop(context);
     });
   }
 
@@ -78,27 +106,40 @@ class ReportVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List> getData() async {
-    await Geolocator.isLocationServiceEnabled().then((value) {
-      if (value == false) {
-        Geolocator.openLocationSettings();
-      }
-    });
-    Geolocator.checkPermission().then((value) {
-      if (value == LocationPermission.denied) {
-        Geolocator.requestPermission();
-      }
-    });
-    var currentLocation = await Geolocator.getCurrentPosition()
-        .timeout(const Duration(seconds: 5), onTimeout: (() {
-      return Geolocator.getLastKnownPosition().then((value) {
-        return value!;
-      });
-    }));
+  Future msgBox(context, title, widget, dismiss) {
+    return showDialog(
+      barrierDismissible: dismiss,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          alignment: Alignment.center,
+          title: Text(title),
+          content: widget,
+        );
+      },
+      context: context,
+    );
+  }
 
+  Future<List?> getData(context) async {
+    msgBox(context, "資料讀取中...", null, false);
+    await checkInternet();
+    if (!internetStatus) {
+      Navigator.pop(context);
+      msgBox(context, "無網路連線", null, true);
+      return null;
+    }
+    await checkGPS();
+    Navigator.pop(context);
+    if (!gpsStatus) {
+      msgBox(context, "無GPS訊號",
+          const Text("讀取最近一次的定位地址"), true);
+    }
     var placemarks = await placemarkFromCoordinates(
-        currentLocation.latitude, currentLocation.longitude,
-        localeIdentifier: "zh_TW");
+            currentLocation!.latitude, currentLocation!.longitude,
+            localeIdentifier: "zh_TW")
+        .catchError((error) {
+      msgBox(context, "網路連線異常", null, true);
+    });
 
     var sms = "";
     for (var item in reporList.entries) {
@@ -108,7 +149,6 @@ class ReportVM extends ChangeNotifier {
         sms = item.value;
       }
     }
-
     return [placemarks.first.street.toString().substring(5), sms];
   }
 }

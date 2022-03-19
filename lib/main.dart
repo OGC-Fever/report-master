@@ -52,156 +52,155 @@ class HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Report Devil"),
+        title: const Text("檢舉魔人"),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
-        child: SizedBox(
-          child: Column(
-            children: [
-              SizedBox(
-                  height: rowHeight,
-                  child: Row(children: [
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          "車牌:",
-                          style: cus,
-                        )),
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        style: cus,
-                        controller: plateController,
-                        onChanged: (value) {
-                          Provider.of<ReportVM>(context, listen: false).renew();
-                        },
-                      ),
-                    ),
-                  ])),
-              SizedBox(
-                height: rowHeight,
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          "檢舉項目:",
-                          style: cus,
-                        )),
-                    Expanded(
-                      flex: 2,
-                      child: DropdownButton(
-                          style: cus,
-                          value: chooseValue,
-                          items: reportList.toList(),
-                          onChanged: (value) {
-                            Provider.of<ReportVM>(context, listen: false)
-                                .chooseValue = value.toString();
-                            Provider.of<ReportVM>(context, listen: false)
-                                .renew();
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: rowHeight * 2,
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          "Address:",
-                          style: cus,
-                        )),
-                    Expanded(
-                      flex: 2,
+        child: Column(
+          children: [
+            ConstrainedBox(
+                constraints: BoxConstraints.expand(height: rowHeight),
+                // height: rowHeight,
+                child: Row(children: [
+                  Expanded(
+                      flex: 1,
                       child: Text(
-                        address,
+                        "車牌:",
                         style: cus,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Provider.of<ReportVM>(context, listen: false)
-                            .getAddress(context);
+                      )),
+                  Expanded(
+                    flex: 2,
+                    child: TextField(
+                      style: cus,
+                      controller: plateController,
+                      onChanged: (value) {
+                        Provider.of<ReportVM>(context, listen: false).renew();
                       },
-                      child: const Icon(
-                        Icons.gps_not_fixed,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: rowHeight,
-                child: Row(
-                  children: [
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          "SMS:",
-                          style: cus,
-                        )),
-                    Expanded(
-                        flex: 2,
-                        child: Text(
-                          sms,
-                          style: cus,
-                        )),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: rowHeight * 3,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ])),
+            ConstrainedBox(
+              constraints: BoxConstraints.expand(height: rowHeight),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
                       child: Text(
-                        "Report Message:",
+                        "檢舉項目:",
                         style: cus,
-                        textAlign: TextAlign.justify,
-                      ),
+                      )),
+                  Expanded(
+                    flex: 2,
+                    child: DropdownButton(
+                        style: cus,
+                        value: chooseValue,
+                        items: reportList.toList(),
+                        onChanged: (value) {
+                          Provider.of<ReportVM>(context, listen: false)
+                              .chooseValue = value.toString();
+                          Provider.of<ReportVM>(context, listen: false).renew();
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints.expand(height: rowHeight * 2),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        "地址:",
+                        style: cus,
+                      )),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      address,
+                      style: cus,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ReportVM>(context, listen: false)
+                          .getAddress(context);
+                    },
+                    child: const Icon(
+                      Icons.gps_not_fixed,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints.expand(height: rowHeight),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        "簡訊號碼:",
+                        style: cus,
+                      )),
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                        sms,
+                        style: cus,
+                      )),
+                ],
+              ),
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints.expand(height: rowHeight * 3),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "檢舉內容:",
+                      style: cus,
                     ),
                     TextField(
-                      maxLines: 4,
+                      maxLines: null,
                       style: cus,
                       controller: smsController,
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: rowHeight,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Provider.of<ReportVM>(context, listen: false)
-                                .clear();
-                          },
-                          child: const Icon(Icons.cleaning_services)),
-                    ),
-                    const Spacer(),
-                    Expanded(
-                      flex: 1,
-                      child: ElevatedButton(
-                          onPressed: sendable
-                              ? () =>
-                                  Provider.of<ReportVM>(context, listen: false)
-                                      .sendingSMS()
-                              : null,
-                          child: const Icon(Icons.send)),
-                    )
-                  ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.expand(height: rowHeight),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Provider.of<ReportVM>(context, listen: false).clear();
+                        },
+                        child: const Icon(Icons.cleaning_services)),
+                  ),
                 ),
-              )
-            ],
-          ),
+                const Spacer(),
+                Expanded(
+                  flex: 1,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.expand(height: rowHeight),
+                    child: ElevatedButton(
+                        onPressed: sendable
+                            ? () =>
+                                Provider.of<ReportVM>(context, listen: false)
+                                    .sendingSMS()
+                            : null,
+                        child: const Icon(Icons.send)),
+                  ),
+                )
+              ],
+            )
+          ],
         ),
       ),
     );
