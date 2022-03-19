@@ -112,6 +112,7 @@ class ReportVM extends ChangeNotifier {
 
   Future msgBox(context, title, widget, dismiss) {
     return showDialog(
+      context: context,
       barrierDismissible: dismiss,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -120,7 +121,6 @@ class ReportVM extends ChangeNotifier {
           content: widget,
         );
       },
-      context: context,
     );
   }
 

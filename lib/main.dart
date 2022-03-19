@@ -42,7 +42,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     var chooseValue = Provider.of<ReportVM>(context).chooseValue;
     var sendable = Provider.of<ReportVM>(context).sendable;
-    var cus = const TextStyle(fontSize: 18);
+    var customStyle = const TextStyle(fontSize: 18);
     var reportList = Provider.of<ReportVM>(context).reportList;
     var address = Provider.of<ReportVM>(context).address;
     var sms = Provider.of<ReportVM>(context).sms;
@@ -52,7 +52,48 @@ class HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("檢舉魔人"),
+        title: const Text("檢舉魔人-簡訊版"),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("檢舉魔人-簡訊版"),
+                    content: ConstrainedBox(
+                      constraints: BoxConstraints.expand(
+                          height: MediaQuery.of(context).size.height / 2),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: const [
+                                Expanded(flex: 1, child: Text("作者:")),
+                                Expanded(flex: 3, child: Text("OrzOGC")),
+                              ],
+                            ),
+                            const Spacer(),
+                            Row(
+                              children: const [
+                                Text(
+                                  "寫糞code動機:",
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            const Text(
+                              "既然條子們嫌坐在辦公室吹冷氣辦案太累, 我只好大發慈悲的請他們多出門走走,多運動有益身心健康, 違規魔人一個比一個誇張無恥毫無下限, 反正檢舉不用錢,就讓我們來濫用保貴的警政資源當地下巿長, 一起來互相傷害吧!",
+                            ),
+                          ]),
+                    ),
+                  );
+                },
+              );
+            },
+            child: const Text("about"),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(10),
@@ -66,12 +107,12 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "車牌:",
-                        style: cus,
+                        style: customStyle,
                       )),
                   Expanded(
                     flex: 2,
                     child: TextField(
-                      style: cus,
+                      style: customStyle,
                       controller: plateController,
                       onChanged: (value) {
                         Provider.of<ReportVM>(context, listen: false).renew();
@@ -87,12 +128,12 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "檢舉項目:",
-                        style: cus,
+                        style: customStyle,
                       )),
                   Expanded(
                     flex: 2,
                     child: DropdownButton(
-                        style: cus,
+                        style: customStyle,
                         value: chooseValue,
                         items: reportList.toList(),
                         onChanged: (value) {
@@ -112,13 +153,13 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "地址:",
-                        style: cus,
+                        style: customStyle,
                       )),
                   Expanded(
                     flex: 2,
                     child: Text(
                       address,
-                      style: cus,
+                      style: customStyle,
                     ),
                   ),
                   GestureDetector(
@@ -141,13 +182,13 @@ class HomePageState extends State<HomePage> {
                       flex: 1,
                       child: Text(
                         "簡訊號碼:",
-                        style: cus,
+                        style: customStyle,
                       )),
                   Expanded(
                       flex: 2,
                       child: Text(
                         sms,
-                        style: cus,
+                        style: customStyle,
                       )),
                 ],
               ),
@@ -160,11 +201,11 @@ class HomePageState extends State<HomePage> {
                   children: [
                     Text(
                       "檢舉內容:",
-                      style: cus,
+                      style: customStyle,
                     ),
                     TextField(
                       maxLines: null,
-                      style: cus,
+                      style: customStyle,
                       controller: smsController,
                     ),
                   ],
