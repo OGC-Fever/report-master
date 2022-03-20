@@ -14,9 +14,9 @@ class ReportVM extends ChangeNotifier {
   });
   String? chooseValue;
   Position? currentLocation;
-  var gpsStatus = false;
-  var internetStatus = false;
-  var timeout = 5;
+  late bool gpsStatus;
+  late bool internetStatus;
+  var timeout = 3;
   var plateController = TextEditingController();
   var smsController = TextEditingController();
   var address = "";
@@ -48,14 +48,14 @@ class ReportVM extends ChangeNotifier {
   }
 
   Future<void> checkGPS() async {
-    await Geolocator.isLocationServiceEnabled().then((value) {
+    await Geolocator.isLocationServiceEnabled().then((value) async {
       if (value == false) {
-        Geolocator.openLocationSettings();
+        await Geolocator.openLocationSettings();
       }
     });
-    await Geolocator.checkPermission().then((value) {
+    await Geolocator.checkPermission().then((value) async {
       if (value == LocationPermission.denied) {
-        Geolocator.requestPermission();
+        await Geolocator.requestPermission();
       }
     });
     await Geolocator.getCurrentPosition()
@@ -65,13 +65,12 @@ class ReportVM extends ChangeNotifier {
         })
         .timeout(Duration(seconds: timeout))
         .catchError((error) async {
-          currentLocation =
-              await Geolocator.getLastKnownPosition().then((value) => value);
           gpsStatus = false;
+          currentLocation = await Geolocator.getLastKnownPosition();
         });
   }
 
-  Future<void> getAddress(var context) async {
+  Future<void> getAddress(context) async {
     getData(context).then((value) {
       if (value != null) {
         address = value[0];
@@ -82,13 +81,13 @@ class ReportVM extends ChangeNotifier {
   }
 
   Future<List?> getData(context) async {
-    msgBox(context, "資料讀取中...", null, false);
     await checkInternet();
     if (!internetStatus) {
-      Navigator.pop(context);
-      msgBox(context, "無網路連線", null, true);
+      msgBox(context, "無網路連線", null, false);
+      Timer(Duration(seconds: timeout), () => Navigator.pop(context));
       return null;
     }
+    msgBox(context, "資料讀取中...", null, false);
     await checkGPS();
     Navigator.pop(context);
     if (!gpsStatus) {

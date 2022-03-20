@@ -13,6 +13,8 @@ void main() {
         child: const ReportDevil(),
       ),
     );
+    ReportVM().checkInternet();
+    ReportVM().checkGPS();
   });
 }
 
