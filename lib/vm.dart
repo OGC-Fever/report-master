@@ -9,7 +9,7 @@ import 'package:flutter_sms/flutter_sms.dart';
 
 class ReportVM extends ChangeNotifier {
   var reportList =
-      ["紅線停車", "路口轉角停車", "併排停車", "公車站違停", "佔用身障車格", "其它"].map((value) {
+      ["紅線停車", "路口轉角停車", "併排停車", "公車站違停", "佔用身障停車格", "其它"].map((value) {
     return DropdownMenuItem(child: Text(value), value: value);
   });
   String? chooseValue;
@@ -32,7 +32,8 @@ class ReportVM extends ChangeNotifier {
     } else {
       item = chooseValue;
     }
-    smsController.text = "${plateController.text}\r\n$item\r\n$address";
+    smsController.text =
+        "車牌:${plateController.text}\r\n" "違規事項:$item\r\n" "地址:$address";
     check();
     notifyListeners();
   }
