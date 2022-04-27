@@ -129,10 +129,8 @@ class ReportVM extends ChangeNotifier {
   }
 
   void check() {
-    if (plateController.text.isNotEmpty &&
-        address.isNotEmpty &&
-        sms.isNotEmpty &&
-        smsController.text.isNotEmpty) {
+    // plateController.text.isNotEmpty &&
+    if (address.isNotEmpty && sms.isNotEmpty && smsController.text.isNotEmpty) {
       sendable = true;
     } else {
       sendable = false;
