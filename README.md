@@ -8,8 +8,7 @@
 
 ## Getting Started
 
-![1](1.png)
-![2](https://user-images.githubusercontent.com/55621499/158184333-611f5859-8456-4aa1-bf76-f964c18c44d5.png)
+![1](1.png =400x)
 
 step.1 輸入車牌  
 step.2 選擇檢舉頂目  
