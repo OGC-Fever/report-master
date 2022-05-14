@@ -8,7 +8,7 @@
 
 ## Getting Started
 
-![1](1.png | width=400)
+[[1.png | width=400]]
 
 step.1 輸入車牌  
 step.2 選擇檢舉頂目  
