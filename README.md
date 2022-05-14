@@ -8,8 +8,7 @@
 
 ## Getting Started
 
-[[1.png | width=400px]]
-<img src="1.png" width="300">
+<img src="readme.png" width="300">
 
 step.1 輸入車牌  
 step.2 選擇檢舉頂目  
