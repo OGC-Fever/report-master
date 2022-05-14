@@ -286,7 +286,7 @@ class HomePageState extends State<HomePage> {
                                     style: titleStyle,
                                   ),
                                   content: SizedBox(
-                                    height: rowHeight * 3,
+                                    height: rowHeight * 4,
                                     child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
