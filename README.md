@@ -9,6 +9,7 @@
 ## Getting Started
 
 [[1.png | width=400]]
+<img src="1.png" width="300">
 
 step.1 輸入車牌  
 step.2 選擇檢舉頂目  
