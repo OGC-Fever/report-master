@@ -8,7 +8,7 @@
 
 ## Getting Started
 
-[[1.png | width=400]]
+[[1.png | width=400px]]
 <img src="1.png" width="300">
 
 step.1 輸入車牌  
