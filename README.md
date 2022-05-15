@@ -8,8 +8,10 @@
 
 ## Getting Started
 
-<img src="rm-1.png" width="300" />
-<img src="rm-2.png" width="300" />
+<div>
+    <img src="rm-1.png" width="300" />
+    <img src="rm-2.png" width="300" />
+</div>
 
 1. 輸入車牌  
 2. 選擇檢舉頂目  
